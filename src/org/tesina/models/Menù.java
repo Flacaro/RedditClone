@@ -145,6 +145,7 @@ public class Menù {
                             Scanner sc = new Scanner(System.in);
                             String titoloPost = sc.next();
                             Post p = PostService.trovaPost(titoloPost);
+                            CommentoService.eliminaCommenti(p.getTitolo());
                             PostService.eliminaPost(titoloPost);
                             UtenteService.getUtenteLoggato().rimuoviPost(p);
                             homePage();
