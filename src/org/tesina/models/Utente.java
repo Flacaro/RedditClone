@@ -19,6 +19,7 @@ public class Utente {
     private String password;
     private final ArrayList<Post> post;
     private final ArrayList<Categoria> categorie;
+    private boolean isAdmin = false;
     
     
     public Utente(String nome, String cognome, String email, String password){
@@ -28,6 +29,23 @@ public class Utente {
         this.password = password;
         this.post = new ArrayList<>();
         this.categorie = new ArrayList<>();
+    }
+    public Utente(String nome, String cognome, String email, String password, boolean isAdmin){
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.password = password;
+        this.post = new ArrayList<>();
+        this.categorie = new ArrayList<>();
+        this.isAdmin = isAdmin;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public String getNome() {
@@ -67,7 +85,7 @@ public class Utente {
     }
 
     public void rimuoviPost(Post post) {
-        this.post.remove(post);
+        this.post.removeIf(p -> p.getTitolo().equals(post.getTitolo()));
     }
     
     public void aggiungiPost(Post post) {
@@ -85,7 +103,17 @@ public class Utente {
     public void aggiungiCategoria(Categoria categoria) {
         this.categorie.add(categoria);
     }
-    
-    
-    
+
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", post=" + post +
+                ", categorie=" + categorie +
+                '}';
+    }
 }

@@ -12,30 +12,42 @@ import java.time.LocalDate;
  * @author flavi
  */
 public class Commento {
-    
+
+    private String titoloPost;
     private String contenuto;
-    private Utente autore;
+    private String autore;
     private LocalDate data;
 
-    public Commento(String contenuto, Utente autore, LocalDate data) {
+
+    public Commento(String titoloPost, String contenuto, String autore, LocalDate data) {
         this.contenuto = contenuto;
         this.autore = autore;
         this.data = data;
+       this.titoloPost = titoloPost;
     }
 
-    public String getContenuto() {
-        return contenuto;
+    public Commento(String contenuto, String titoloPost) {
+        this.contenuto = contenuto;
+        this.titoloPost = titoloPost;
     }
+
+    public String getTitoloPost() { return titoloPost; }
+
+    public void setTitoloPost(String titoloPost) {
+        this.titoloPost = titoloPost;
+    }
+
+    public String getContenuto() { return contenuto; }
 
     public void setContenuto(String contenuto) {
         this.contenuto = contenuto;
     }
 
-    public Utente getAutore() {
+    public String getAutore() {
         return autore;
     }
 
-    public void setAutore(Utente autore) {
+    public void setAutore(String autore) {
         this.autore = autore;
     }
 
@@ -49,7 +61,7 @@ public class Commento {
     
     @Override
     public String toString(){
-        return "Commento: " + this.contenuto + ", Autore: " + this.autore.getNome(); 
+        return "Commento: " + this.contenuto + ", Autore: " + this.autore;
     }
     
 }

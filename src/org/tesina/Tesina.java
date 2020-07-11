@@ -5,12 +5,11 @@
  */
 package org.tesina;
 
-import java.awt.event.MouseListener;
-import org.tesina.models.*;
+import org.tesina.models.Menù;
+import org.tesina.models.Post;
+import org.tesina.services.PostService;
 
-import javax.swing.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.io.*;
 
 
 /**
@@ -20,22 +19,41 @@ import java.util.ArrayList;
 public class Tesina {
 
     
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws IOException {
 
-        
+//       Utente utente = UtenteService.cerca("Pincopallino");
+//        if(utente != null){
+//            System.out.println(utente.getNome());
+//        } else {
+//            System.out.println("Non c'è");
+//        }
+//
+//        Categoria categoria = CategoriaService.trovaCategoria("cibo");
+//            if(categoria != null){
+//            System.out.println(categoria.getArgomento());
+//        } else {
+//            System.out.println("Non c'è");
+//        }
+//
+//        Commento commento = CommentoService.trovaCommento("Al mare");
+//        if(commento != null){
+//            System.out.println(commento.getContenuto());
+//        } else {
+//            System.out.println("Commento non trovato");
+//        }
+
+//         Categoria montagna = new Categoria("montagna");
+//         CategoriaService.scriviCategoria(montagna);
+//         Utente u1 = new Utente("Stas", "Ant", "Stas@gmail.com","asd");
+//         Post post = new Post("Bello",LocalDate.now(),"djflkwrjl",u1,montagna);
+//         PostService.scriviPost(post);
+
+            Menù.login();
     }
 
-    public static void aggiungiPost(Post post, Categoria categoria, Utente utente) {
-        categoria.aggiungiPost(post);
-        utente.aggiungiPost(post);
-        System.out.println(post);
-    }
 
-    public static void rimuoviPost(Post post, Categoria categoria, Utente utente) {
-        categoria.rimuoviPost(post);
-        utente.rimuoviPost(post);
-    }
+
+
 
     public static void registrazione(String nome, String cognome, String email, String password) {
         if (nome.equals(" ")) System.out.println("Nome non valido");

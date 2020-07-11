@@ -18,10 +18,14 @@ public class Post {
     private String titolo;
     private LocalDate dataPost;
     private String contenuto;
-    private Utente utente;
+    private String utente;
     private Categoria categoria;
 
-    public Post(String titolo, LocalDate dataPost, String contenuto, Utente u1, Categoria categoria) {
+    public Post() {
+        this.commenti = new ArrayList<>();
+    }
+
+    public Post(String titolo, LocalDate dataPost, String contenuto, String u1, Categoria categoria) {
         this.commenti = new ArrayList<>();
         this.titolo = titolo;
         this.dataPost = dataPost;
@@ -46,11 +50,11 @@ public class Post {
         this.contenuto = contenuto;
     }
 
-    public Utente getUtente() {
+    public String getUtente() {
         return utente;
     }
 
-    public void setUtente(Utente utente) {
+    public void setUtente(String utente) {
         this.utente = utente;
     }
 
@@ -92,10 +96,16 @@ public class Post {
     public void setContenutoPost(String contenutoPost) {
         this.contenuto = contenutoPost;
     }
-    
-    public String toString(){
-        return "Titolo: "+this.titolo+ ", Data: "+this.dataPost+ ", Contenuto: "+this.contenuto;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "commenti=" + commenti +
+                ", titolo='" + titolo + '\'' +
+                ", dataPost=" + dataPost +
+                ", contenuto='" + contenuto + '\'' +
+                ", utente=" + utente +
+                ", categoria=" + categoria +
+                '}';
     }
-     
-    
 }
