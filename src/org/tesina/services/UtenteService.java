@@ -26,6 +26,10 @@ public class UtenteService {
             while (currentLine != null) {
                 String[] riga = currentLine.split(",");
                 if (riga[2].equals(email)) {
+                    if(riga.length == 5) {
+                        Utente admin = new Utente(riga[0], riga[1], riga[2], riga[3], Boolean.parseBoolean(riga[4]));
+                        return admin;
+                    }
                     Utente utente = new Utente(riga[0], riga[1], riga[2], riga[3]);
                     // bisogna aggiungere i post dell'utente
                     for(Post p : PostService.trovaPostUtente(utente)) {
@@ -43,20 +47,45 @@ public class UtenteService {
 
 
 
-    public static void listaUtenti(String nome) throws IOException {
+    public static ArrayList<Utente> listaUtenti() {
         File file = new File("./src/org/tesina/Files/Utente.txt");
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String currentLine = br.readLine();
-        while(currentLine != null){
-            String[] riga = currentLine.split(",");
-            if(riga[0].equals(nome)){
-                System.out.println("Utente trovato");
-            } else {
-                System.out.println("L'utente non esiste");
+        ArrayList<Utente> listaUtenti = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String currentLine = br.readLine();
+
+            while(currentLine != null){
+                String[] riga = currentLine.split(",");
+                if(riga.length == 4) listaUtenti.add(new Utente(riga[0], riga[1], riga[2], riga[3]));
+                currentLine = br.readLine();
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return listaUtenti;
     }
 
 
+    public static void eliminaUtente(String email) {
+        File file = new File("./src/org/tesina/Files/Utente.txt");
+        File tempFile = new File("./src/org/tesina/Files/tempUtente.txt");
+        try (BufferedWriter wr = new BufferedWriter(new FileWriter(tempFile, true));
+             BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+            String currentLine = br.readLine();
+            while (currentLine != null) {
+                String[] riga = currentLine.split(",");
+                if (!riga[2].equals(email)) {
+                    wr.write(currentLine + "\n");
+                }
+                currentLine = br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (file.delete()) tempFile.renameTo(file);
+    }
 
 }

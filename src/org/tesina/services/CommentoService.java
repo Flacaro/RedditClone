@@ -41,7 +41,7 @@ public class CommentoService {
     //elimina commenti
     public static void eliminaCommenti(String titoloPost) {
         File file = new File("./src/org/tesina/Files/Commenti.txt");
-        File tempFile = new File("./src/org/tesina/Files/TempFile.txt");
+        File tempFile = new File("./src/org/tesina/Files/tempCommenti.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(file));
              BufferedWriter wr = new BufferedWriter(new FileWriter(tempFile, true))) {
@@ -64,6 +64,8 @@ public class CommentoService {
         if(file.delete())
             tempFile.renameTo(file);
     }
+
+
 
 }
 

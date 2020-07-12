@@ -111,6 +111,36 @@ public class PostService {
         return posts;
     }
 
+    public static void eliminaPostUtente(String emailUtente) {
+        File file = new File("./src/org/tesina/Files/Posts.txt");
+        File tempFile = new File("./src/org/tesina/Files/TempFile.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file));
+             BufferedWriter wr = new BufferedWriter(new FileWriter(tempFile, true))) {
+
+            String currentLine = br.readLine();
+
+            while (currentLine != null) {
+                String[] riga = currentLine.split(",");
+
+                if (!riga[3].equals(emailUtente))
+                    wr.write(currentLine + "\n");
+
+                currentLine = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(file.delete())
+            tempFile.renameTo(file);
+    }
+
+
+
+
+
 }
 
 

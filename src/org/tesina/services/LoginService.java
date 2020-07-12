@@ -25,12 +25,18 @@ public class LoginService {
         String email = scan.next();
         System.out.println("Inserisci password");
         String password = scan.next();
+
         Utente utente = UtenteService.trovaEmailUtente(email);
         //la funzione può restituire null se non trova un utente
         if (utente != null) {
             if (utente.getPassword().equals(password)) {
                 UtenteService.setUtenteLoggato(utente);
-                Menù.homePage();
+                if(utente.isAdmin())  {
+                   Menù.adminHomepage();
+                }
+                else {
+                    Menù.homePage();
+                }
             }
         }
         Menù.login();

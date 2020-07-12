@@ -2,8 +2,10 @@ package org.tesina.models;
 
 import org.tesina.services.*;
 
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menù {
@@ -30,11 +32,12 @@ public class Menù {
         int numero = scan.nextInt();
         switch (numero) {
             case 1:
-                System.out.println("Scegli una categoria");
+
                 Post post = new Post();
                 for (Categoria c : CategoriaService.listaCategorie()) {
                     System.out.println(c.getArgomento());
                 }
+                System.out.println("Scegli una categoria");
                 String line = scan.next();
                 Categoria categoria = CategoriaService.trovaCategoria(line);
                 post.setCategoria(categoria);
@@ -159,6 +162,150 @@ public class Menù {
             case 2:
                 UtenteService.logoutUtente();
                 login();
+        }
+
+
+    }
+
+
+    public static void adminHomepage() {
+        System.out.println("Scegli 1 per gestire le categorie, 2 per gestire gli utenti, 3 per fare logout");
+        Scanner sc = new Scanner(System.in);
+        int scelta = sc.nextInt();
+
+        switch (scelta) {
+            case 1 :
+                 Scanner scanner = new Scanner(System.in);
+                 for(Categoria c: CategoriaService.listaCategorie()) {
+                     System.out.println(c.getArgomento());
+                 }
+
+                adminMenu1();
+
+
+            case 2:
+                ArrayList<Utente> listaUtenti = UtenteService.listaUtenti();
+                if(listaUtenti.size() != 0) {
+                    for(Utente u: listaUtenti) {
+                        System.out.println("Nome: " + u.getNome() + " Email: " + u.getEmail());
+                    }
+                    System.out.println("Scegli l'email dell'utente che vuoi eliminare");
+                    String emailUtenteSelezionato = sc.next();
+                    Utente utente = UtenteService.trovaEmailUtente(emailUtenteSelezionato);
+                    for(Post p: PostService.trovaPostUtente(utente)) {
+                        CommentoService.eliminaCommenti(p.getTitolo());
+                    }
+                    PostService.eliminaPostUtente(emailUtenteSelezionato);
+                    UtenteService.eliminaUtente(emailUtenteSelezionato);
+                } else {
+                    System.out.println("Non ci sono utenti");
+                }
+
+                adminHomepage();
+                break;
+
+            case 3:
+                login();
+        }
+    }
+
+
+
+    public static void adminMenu1() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Premi 1 per aggiungere una categoria, 2 per eliminare una categoria, 3 esplora post della categoria, 4 per tornare alla home");
+        int sceltaUtente = 0;
+        try {
+           sceltaUtente =  scanner.nextInt();
+        }catch(InputMismatchException e) {
+            adminMenu1();
+        }
+
+        switch (sceltaUtente) {
+            case 1:
+                System.out.println("Inserisci il nome della categoria");
+                String nomeCategoria = scanner.next();
+                CategoriaService.scriviCategoria(nomeCategoria);
+                System.out.println("Categoria aggiunta");
+                adminMenu1();
+                break;
+            case 2:
+                System.out.println("Inserisci il nome della categoria da eliminare");
+                String categoria = scanner.next();
+                for(Post p: PostService.postDellaCategoria(categoria)) {
+                    CommentoService.eliminaCommenti(p.getTitolo());
+                    PostService.eliminaPost(p.getTitolo());
+                }
+                CategoriaService.eliminaCategoria(categoria);
+                System.out.println("Categoria eliminata con successo");
+                adminMenu1();
+                break;
+            case 3:
+                for(Categoria c: CategoriaService.listaCategorie()) {
+                    System.out.println(c.getArgomento());
+                }
+                System.out.println("Seleziona il nome della categoria");
+                String c = scanner.next();
+                // trova tutti i post della categoria
+                ArrayList<Post> postCategoria = CategoriaService.trovatPostCategoria(c);
+                if(postCategoria.size() != 0) {
+                    System.out.println("----------------- POST -----------------");
+                    for(Post p: postCategoria) {
+                        System.out.println("Titolo post: " + p.getTitolo());
+                    }
+                    System.out.println("---------------------------------------");
+                    adminPostMenu();
+                } else {
+                    System.out.println("La categoria non contiene post");
+                }
+
+                adminMenu1();
+                break;
+            case 4:
+                adminHomepage();
+        }
+    }//end method
+
+
+    public static void adminPostMenu() {
+        Scanner sc = new Scanner(System.in);
+        sc.useDelimiter("\\n");
+        System.out.println("Seleziona il nome post da visualizzare");
+        String postSelezionato = null;
+        try {
+            postSelezionato = sc.next();
+        } catch(InputMismatchException e) {
+            adminPostMenu();
+        }
+
+        Post post = null;
+        // se l'utente ha inserito il nome del post corretto
+        if(PostService.trovaPost(postSelezionato) != null) {
+
+            post = PostService.trovaPost(postSelezionato);
+
+            ArrayList<Commento> commentiPost = CommentoService.trovaCommento(postSelezionato);
+            System.out.println("Titolo: " + post.getTitolo() + " contenuto: " + post.getContenuto() + " scritto il: " + post.getDataPost());
+            System.out.println("-------------------Commenti---------------");
+            for(Commento c: commentiPost) {
+                System.out.println(c.getContenuto());
+            }
+            System.out.println("------------------------------------------");
+
+            System.out.println("\nPremi 1 per eliminare il post, 2 per tornare alla home");
+            int scelta = sc.nextInt();
+
+            switch (scelta) {
+                case 1:
+                    CommentoService.eliminaCommenti(postSelezionato);
+                    PostService.eliminaPost(postSelezionato);
+                    System.out.println("Post eliminato");
+                    adminMenu1();
+                case 2:
+                    adminHomepage();
+            }
+
         }
 
 

@@ -1,9 +1,11 @@
 package org.tesina.services;
 
 import org.tesina.models.Categoria;
+import org.tesina.models.Post;
 import org.tesina.models.Utente;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CategoriaService {
@@ -25,15 +27,16 @@ public class CategoriaService {
         return null;
     }
 
-    public static void scriviCategoria(Categoria categoria) {
+    public static void scriviCategoria(String nomeCategoria) {
         File file = new File("./src/org/tesina/Files/Categoria.txt");
         try (BufferedWriter wr = new BufferedWriter(new FileWriter(file, true))) {
-            wr.write("montagna\n");
+            wr.write(nomeCategoria + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-     public static ArrayList<Categoria>  listaCategorie(){
+
+    public static ArrayList<Categoria>  listaCategorie(){
          File file = new File("./src/org/tesina/Files/Categoria.txt");
          ArrayList<Categoria> categorie = new ArrayList<>();
          try(BufferedReader br = new BufferedReader(new FileReader(file))){
@@ -51,5 +54,50 @@ public class CategoriaService {
     }
 
 
+    public static void eliminaCategoria(String categoria) {
+        File file = new File("./src/org/tesina/Files/Categoria.txt");
+        File tempFile = new File("./src/org/tesina/Files/categoriaTemp.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file));
+             BufferedWriter wr = new BufferedWriter(new FileWriter(tempFile, true))) {
+
+            String currentLine = br.readLine();
+
+            while (currentLine != null) {
+
+                if (!currentLine.equals(categoria))
+                    wr.write(currentLine + "\n");
+
+                currentLine = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(file.delete())
+            tempFile.renameTo(file);
+    }
+
+
+
+    public static ArrayList<Post> trovatPostCategoria(String nomeCategoria) {
+        ArrayList<Post> post = new ArrayList<>();
+        File file = new File("./src/org/tesina/Files/Posts.txt");
+        try(BufferedReader br = new BufferedReader(new FileReader(file))){
+            String currentLine = br.readLine();
+            while(currentLine != null) {
+                String[] riga = currentLine.split(",");
+                if(riga[4].equals(nomeCategoria)) {
+                    post.add(new Post(riga[0], LocalDate.parse(riga[1]), riga[2], riga[3], CategoriaService.trovaCategoria(riga[4])));
+                }
+                currentLine = br.readLine();
+            }
+
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        return post;
+    }
 }
 
